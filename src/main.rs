@@ -1,10 +1,9 @@
 #![allow(unused_imports)]
 
-use std::default::Default;
 use bevy::ecs::schedule::SystemDescriptor;
+use std::default::Default;
 
-use bevy::prelude::*;
-use bevy::render::camera::ScalingMode;
+use bevy::{prelude::*, render::camera::ScalingMode};
 
 const CLEAR: Color = Color::rgb(0.1, 0.1, 0.1);
 const ASPECT_RATIO: f32 = 16. / 9.;
@@ -32,7 +31,10 @@ pub struct LandsknechtPlugin;
 impl Plugin for LandsknechtPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(spawn_camera);
-        app.add_startup_system_to_stage(StartupStage::PreStartup, load_sprite_sheet);
+        app.add_startup_system_to_stage(
+            StartupStage::PreStartup,
+            load_sprite_sheet,
+        );
     }
 }
 
@@ -41,7 +43,8 @@ fn load_sprite_sheet(
     assets: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    let image = assets.load("kenney_rts_sci_fi/Spritesheet/scifiRTS_spritesheet.png");
+    let image =
+        assets.load("kenney_rts_sci_fi/Spritesheet/scifiRTS_spritesheet.png");
     let atlas = TextureAtlas::from_grid_with_padding(
         image,
         Default::default(),

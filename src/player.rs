@@ -1,6 +1,7 @@
-use crate::{debug::ENABLE_INSPECTOR, sprites::SpriteSheet};
 use bevy::{core::Zeroable, prelude::*};
 use bevy_inspector_egui::{Inspectable, RegisterInspectable};
+
+use crate::{debug::ENABLE_INSPECTOR, sprites::SpriteSheet};
 
 pub const TILE_SIZE: f32 = 10.;
 

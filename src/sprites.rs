@@ -1,7 +1,8 @@
 use std::default::Default;
 
-use crate::player::TILE_SIZE;
 use bevy::prelude::*;
+
+use crate::player::TILE_SIZE;
 
 pub struct SpriteSheet(pub Handle<TextureAtlas>);
 pub struct AsciiSheet(pub Handle<TextureAtlas>);

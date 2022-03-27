@@ -1,9 +1,10 @@
-use crate::{ASPECT_RATIO, CAMERA_SCALE, HEIGHT};
 use bevy::{
     input::mouse::{MouseMotion, MouseScrollUnit, MouseWheel},
     prelude::*,
     render::camera::ScalingMode,
 };
+
+use crate::{ASPECT_RATIO, CAMERA_SCALE, HEIGHT};
 
 pub struct CameraPlugin;
 

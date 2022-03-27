@@ -8,20 +8,23 @@ use bevy::{
     input::mouse::{MouseMotion, MouseScrollUnit, MouseWheel},
     math::Vec2Swizzles,
     prelude::*,
-    render::camera::{CameraPlugin, ScalingMode},
+    render::camera::ScalingMode,
 };
 use bevy_inspector_egui::{RegisterInspectable, WorldInspectorPlugin};
 
 use crate::{
+    camera::CameraPlugin,
     debug::DebugPlugin,
     player::{Player, PlayerPlugin},
     sprites::SpritesPlugin,
+    tilemap::TilemapPlugin,
 };
 
 mod camera;
 mod debug;
 mod player;
 mod sprites;
+mod tilemap;
 
 const CLEAR: Color = Color::rgb(0.1, 0.1, 0.1);
 const ASPECT_RATIO: f32 = 16. / 9.;
@@ -49,9 +52,10 @@ pub struct LandsknechtPlugin;
 
 impl Plugin for LandsknechtPlugin {
     fn build(&self, app: &mut App) {
+        app.add_plugin(DebugPlugin);
         app.add_plugin(CameraPlugin);
         app.add_plugin(PlayerPlugin);
         app.add_plugin(SpritesPlugin);
-        app.add_plugin(DebugPlugin);
+        app.add_plugin(TilemapPlugin);
     }
 }

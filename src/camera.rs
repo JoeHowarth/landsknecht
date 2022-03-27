@@ -25,7 +25,6 @@ fn spawn_camera(mut commands: Commands) {
     camera.orthographic_projection.scaling_mode = ScalingMode::None;
 
     commands.spawn_bundle(camera);
-    // Vec2::new(CAMERA_SCALE / HEIGHT * ASPECT_RATIO,  CAMERA_SCALE / HEIGHT);
 }
 
 fn move_camera(

@@ -1,8 +1,11 @@
-use crate::sprites::SpriteSheet;
+use crate::{debug::ENABLE_INSPECTOR, sprites::SpriteSheet};
 use bevy::{core::Zeroable, prelude::*};
-use bevy_inspector_egui::Inspectable;
+use bevy_inspector_egui::{Inspectable, RegisterInspectable};
 
 pub const TILE_SIZE: f32 = 10.;
+
+#[derive()]
+pub struct Collidable;
 
 pub struct PlayerPlugin;
 
@@ -10,6 +13,10 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(spawn_player);
         app.add_system(move_player);
+
+        if ENABLE_INSPECTOR {
+            app.register_inspectable::<Player>();
+        }
     }
 }
 
@@ -32,7 +39,7 @@ fn spawn_player(mut commands: Commands, sprites: Res<SpriteSheet>) {
             },
             ..Default::default()
         })
-        .insert(Player { speed: 1.0 })
+        .insert(Player { speed: 10.0 })
         .insert(Name::new("Player"))
         .id();
 }

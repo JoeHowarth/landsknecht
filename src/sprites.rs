@@ -1,8 +1,11 @@
 use std::default::Default;
 
+use crate::player::TILE_SIZE;
 use bevy::prelude::*;
 
 pub struct SpriteSheet(pub Handle<TextureAtlas>);
+pub struct AsciiSheet(pub Handle<TextureAtlas>);
+pub struct MediumFont(pub Handle<Font>);
 
 pub struct SpritesPlugin;
 
@@ -13,10 +16,10 @@ impl Plugin for SpritesPlugin {
             load_sprite_sheet,
         );
         app.add_startup_system_to_stage(StartupStage::PreStartup, load_fonts);
-        app.add_startup_system_to_stage(
-            StartupStage::PostStartup,
-            draw_sprites_with_ids,
-        );
+        // app.add_startup_system_to_stage(
+        //     StartupStage::PostStartup,
+        //     draw_sprites_with_ids,
+        // );
     }
 }
 
@@ -48,7 +51,27 @@ pub fn write(
     });
 }
 
-pub struct MediumFont(pub Handle<Font>);
+pub fn spawn_ascii(
+    commands: &mut Commands,
+    ascii: &Res<AsciiSheet>,
+    idx: u8,
+    pos: Vec2,
+) -> Entity {
+    let mut sprite = TextureAtlasSprite::new(idx as usize);
+    sprite.custom_size = Some(Vec2::splat(TILE_SIZE));
+
+    commands
+        .spawn_bundle(SpriteSheetBundle {
+            sprite,
+            texture_atlas: ascii.0.clone(),
+            transform: Transform {
+                translation: Vec3::new(pos.x, pos.y, 100.),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .id()
+}
 
 fn load_fonts(mut commands: Commands, assets: Res<AssetServer>) {
     let font = assets.load::<Font, _>("fonts/FiraMono-Medium.ttf");
@@ -60,16 +83,22 @@ fn load_sprite_sheet(
     assets: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    let image = assets.load("1bitpack_kenny/Tilesheet/colored.png");
+    let ascii_atlas = TextureAtlas::from_grid(
+        assets.load("16x16-RogueYun-AgmEdit.png"),
+        Vec2::splat(16.),
+        16,
+        16,
+    );
+    commands.insert_resource(AsciiSheet(texture_atlases.add(ascii_atlas)));
+
     let atlas = TextureAtlas::from_grid_with_padding(
-        image,
+        assets.load("1bitpack_kenny/Tilesheet/colored.png"),
         Vec2::splat(16.),
         49,
         22,
         Vec2::splat(1.),
     );
-    let atlas_handle = texture_atlases.add(atlas);
-    commands.insert_resource(SpriteSheet(atlas_handle));
+    commands.insert_resource(SpriteSheet(texture_atlases.add(atlas)));
 }
 
 fn col_row(col: usize, row: usize) -> usize {

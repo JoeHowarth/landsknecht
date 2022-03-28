@@ -148,7 +148,7 @@ fn move_player(
         .find_map(|dir| {
             let cast_res = physics_world.ray_cast_with_filter(
                 player_global_trans.translation,
-                dir.normalize_or_zero(),
+                dir * 1000., // ray stops at end of vector (should be called line cast...)
                 false,
                 // CollisionLayers::all_masks::<Layer>()
                 //     .with_groups([Layer::Player, Layer::Unit]),

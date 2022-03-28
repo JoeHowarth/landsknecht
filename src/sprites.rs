@@ -34,12 +34,12 @@ pub fn write(
         text: Text::with_section(
             text,
             TextStyle {
-                font: font.0.clone(),
+                font:      font.0.clone(),
                 font_size: 12.0,
-                color: Color::WHITE,
+                color:     Color::WHITE,
             },
             TextAlignment {
-                vertical: VerticalAlign::Top,
+                vertical:   VerticalAlign::Top,
                 horizontal: HorizontalAlign::Left,
             },
         ),

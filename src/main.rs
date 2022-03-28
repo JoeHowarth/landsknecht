@@ -1,4 +1,4 @@
-#![allow(unused_imports)]
+#![allow(unused_imports, dead_code)]
 
 use std::default::Default;
 
@@ -10,7 +10,8 @@ use bevy::{
     prelude::*,
     render::camera::ScalingMode,
 };
-use bevy_inspector_egui::{RegisterInspectable, WorldInspectorPlugin};
+use bevy_inspector_egui::{Inspectable, RegisterInspectable, WorldInspectorPlugin};
+use heron::PhysicsPlugin;
 
 use crate::{
     camera::CameraPlugin,
@@ -57,5 +58,24 @@ impl Plugin for LandsknechtPlugin {
         app.add_plugin(PlayerPlugin);
         app.add_plugin(SpritesPlugin);
         app.add_plugin(TilemapPlugin);
+        app.add_plugin(PhysicsPlugin::default());
+        app.add_system_to_stage(CoreStage::PreUpdate, maintain_previous_transform);
     }
+}
+
+#[derive(heron::prelude::PhysicsLayer)]
+pub enum Layer {
+    Player,
+    Obstacle,
+    Unit,
+    Bullet,
+}
+
+#[derive(Inspectable, Component)]
+pub struct PrevTransform(pub Transform);
+
+pub fn maintain_previous_transform(mut q: Query<(&Transform, &mut PrevTransform)>) {
+    q.for_each_mut(|(trans, mut prev): (&Transform, Mut<PrevTransform>)| {
+        prev.0 = trans.clone();
+    })
 }

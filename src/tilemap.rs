@@ -1,11 +1,12 @@
 use std::fs;
 
 use bevy::prelude::*;
+use heron::{CollisionLayers, CollisionShape, RigidBody};
 
 use crate::{
     player::TILE_SIZE,
     sprites::{spawn_ascii, AsciiSheet},
-    CAMERA_SCALE,
+    Layer, CAMERA_SCALE,
 };
 
 pub struct TilemapPlugin;
@@ -32,9 +33,24 @@ fn load_map(mut commands: Commands, ascii: Res<AsciiSheet>) {
                 &mut commands,
                 &ascii,
                 c as u8,
-                Vec2::new(col as f32 * TILE_SIZE, row as f32 * -TILE_SIZE)
-                    + offset,
+                Vec2::new(col as f32 * TILE_SIZE, row as f32 * -TILE_SIZE) + offset,
             );
+            match c {
+                '#' => {
+                    commands
+                        .entity(tile)
+                        .insert(RigidBody::Static)
+                        .insert(CollisionShape::Cuboid {
+                            half_extends:  Vec3::splat(TILE_SIZE / 2.),
+                            border_radius: None,
+                        })
+                        .insert(
+                            CollisionLayers::all_masks::<Layer>()
+                                .with_group(Layer::Obstacle),
+                        );
+                }
+                _ => {}
+            };
             tiles.push(tile);
         }
     }

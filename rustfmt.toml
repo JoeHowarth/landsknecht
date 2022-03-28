@@ -1,4 +1,5 @@
-max_width = 80
+max_width = 90
 reorder_imports = true
 imports_granularity = "crate"
 group_imports = "StdExternalCrate"
+struct_field_align_threshold = 10

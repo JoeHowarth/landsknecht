@@ -147,6 +147,7 @@ fn move_player(
         .into_iter()
         .find_map(|dir| {
             let cast_res = physics_world.ray_cast_with_filter(
+                // todo: why does this crash when getting half way through a tile
                 player_global_trans.translation,
                 dir * 1000., // ray stops at end of vector (should be called line cast...)
                 false,
@@ -157,13 +158,15 @@ fn move_player(
             );
             if let Some(hit) = cast_res {
                 println!("Hit {:?} - dir: {:?}, ", &hit, dir.xy());
-                if hit
+                let distance = hit
                     .collision_point
-                    .distance(player_global_trans.translation)
-                    > magnitude
-                {
+                    .distance(player_global_trans.translation);
+                if distance - TILE_SIZE * 0.5 > magnitude {
+                    // bug doens't happen if adjustment isn't made... weird
+                    println!("Distance: {}", distance);
                     Some(dir)
                 } else {
+                    println!("Too close");
                     None
                 }
             } else {
